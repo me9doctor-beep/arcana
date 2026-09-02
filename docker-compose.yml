@@ -1,0 +1,28 @@
+# ARCANA — development services.
+#
+# Provides a local PostgreSQL matching backend/.env.example.
+# Usage (from the repository root):
+#     docker compose up -d postgres
+#
+# Backend and frontend services are added in later phases.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: arcana-postgres
+    environment:
+      POSTGRES_USER: arcana
+      POSTGRES_PASSWORD: arcana
+      POSTGRES_DB: arcana
+    ports:
+      - "5432:5432"
+    volumes:
+      - arcana_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arcana -d arcana"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  arcana_postgres_data:
